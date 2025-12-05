@@ -1,37 +1,43 @@
-# 🧠 Obesity Classification Using Machine Learning and Genetic Algorithm (GA)
+# 🧠 Obesity Level Prediction Using Machine Learning & Genetic Algorithm
 
-This project aims to predict obesity levels based on health, nutrition, and lifestyle attributes using machine learning algorithms. A Genetic Algorithm (GA) was applied for dimensionality reduction to improve the predictive performance of the models.
+A complete end-to-end machine learning workflow designed to classify obesity levels based on lifestyle, physical characteristics, and dietary habits. The project also applies a **Genetic Algorithm (GA)** for feature selection to reduce dimensionality and improve model performance.
 
 ---
 
-## 📌 Dataset Information
+## 📌 Dataset Overview
 
-- **Source:** Kaggle — Obesity Level Prediction Dataset  
+- **Source:** Kaggle – Obesity Level Prediction Dataset  
 - **Samples:** 2,111  
-- **Original Features:** 16 (expanded to 33 after preprocessing and encoding)  
-- **Task:** Multi-class classification (7 obesity classes)
+- **Original Features:** 16  
+- **Target Classes:** 7  
+- **Final Features After Preprocessing:** 33  
 
-### Features Include:
-Age, Gender, Height, Weight, CH2O (daily water intake), SMOKE, FAF (physical activity), FCVC (vegetable intake), NCP (meals per day), MTRANS (transportation), and more.
+### Target Classes:
+- Insufficient Weight  
+- Normal Weight  
+- Overweight Level I  
+- Overweight Level II  
+- Obesity Type I  
+- Obesity Type II  
+- Obesity Type III  
 
 ---
 
 ## 🛠️ Data Preprocessing
 
-- Missing numerical values → median imputation  
-- Missing categorical values → mode imputation  
-- One-Hot Encoding for all categorical variables  
-- Feature engineering → **Body Mass Index (BMI)**  
-- Standardization for numerical features  
-- Target encoding and **80/20 stratified train-test split**
-
-After preprocessing, the number of attributes increased from **16 to 33 features**.
+- Missing numerical values → **Median imputation**  
+- Missing categorical values → **Most frequent value**  
+- **One-Hot Encoding** for categorical attributes  
+- **Feature engineering:** BMI (Body Mass Index) calculated and added  
+- Numerical features standardized to zero mean and unit variance  
+- Target variable label-encoded  
+- **Train/Test split:** 80% training, 20% testing (stratified)
 
 ---
 
 ## 🤖 Machine Learning Models
 
-### ✔ Artificial Neural Network (ANN)
+### ✔️ Artificial Neural Network (ANN)
 
 - hidden_layer_sizes = (48, 24)  
 - activation = "relu"  
@@ -40,7 +46,7 @@ After preprocessing, the number of attributes increased from **16 to 33 features
 - early_stopping = True  
 - max_iter = 800  
 
-### ✔ Support Vector Machine (SVM)
+### ✔️ Support Vector Machine (SVM)
 
 - kernel = "rbf"  
 - C = 1.0  
@@ -48,66 +54,62 @@ After preprocessing, the number of attributes increased from **16 to 33 features
 
 ---
 
-## 📊 Performance on Original Dataset (Before GA)
+## 📊 Performance (Original Dataset — Before GA)
 
 | Model | Accuracy | Precision | Recall | F1-Score |
 |------|---------:|----------:|-------:|--------:|
-| ANN | 0.9219 | 0.9238 | 0.9220 | 0.9223 |
-| SVM | 0.9480 | 0.9488 | 0.9480 | 0.9483 |
+| ANN  | 0.9219 | 0.9238 | 0.9220 | 0.9223 |
+| SVM  | 0.9480 | 0.9488 | 0.9480 | 0.9483 |
 
 ---
 
-## 🧬 Genetic Algorithm (Feature Selection)
+## 🧬 GA-Based Feature Selection
 
-**GA Hyperparameters:**
+### Genetic Algorithm Parameters
 
-- Population Size = 40  
-- Generations = 20  
-- Crossover Probability = 0.7  
-- Mutation Probability = 0.1  
-- Fitness = model validation accuracy  
+- Population Size (POP_SIZE): 40  
+- Number of Generations (N_GEN): 20  
+- Crossover Probability (CX_PB): 0.7  
+- Mutation Probability (MUT_PB): 0.1  
+- Selection Method: Tournament (size = 3)  
+- Fitness Function: Validation accuracy  
 
-**Chromosome Type:** binary vector (1 = keep feature, 0 = drop feature)
-
----
-
-## ✂️ Features Selected by GA
-
-### ✔ ANN — Selected 18 Features
-Height, Weight, NCP, CH2O, BMI, Gender_Female, Gender_Male, CALC_Always,  
-FAVC_no, FAVC_yes, SCC_no, SCC_yes, SMOKE_no, SMOKE_yes,  
-CAEC_Always, CAEC_Frequently, MTRANS_Motorbike, MTRANS_Walking  
-
-
-### ✔ SVM — Selected 22 Features
-Age, Height, Weight, FCVC, NCP, CH2O, TUE, BMI, Gender_Female, Gender_Male,  
-CALC_Always, CALC_Sometimes, FAVC_no, SCC_no, family_history_with_overweight_no,  
-CAEC_Always, CAEC_Sometimes, CAEC_no, MTRANS_Bike, MTRANS_Motorbike,  
-MTRANS_Public_Transportation, MTRANS_Walking  
-
+### Chromosome Representation
+Binary vector (1 = keep feature, 0 = remove feature)  
+Length = 33 features  
 
 ---
 
-## 📈 Performance on GA-Reduced Dataset (After GA)
+## ✂️ Feature Reduction Results
+
+| Model | Features Before | Features After | Reduction |
+|------|----------------:|---------------:|---------:|
+| ANN  | 33 | 18 | ~45% |
+| SVM  | 33 | 22 | ~33% |
+
+---
+
+## 📈 Performance (After GA — Reduced Dataset)
 
 | Model | Accuracy | Precision | Recall | F1-Score |
 |------|---------:|----------:|-------:|--------:|
 | ANN (After GA) | 0.9504 | 0.9498 | 0.9504 | 0.9499 |
 | SVM (After GA) | 0.9622 | 0.9625 | 0.9622 | 0.9622 |
 
-> 📌 Performance values obtained from experimental results.  
-> ANN and SVM both improved after feature selection using GA. 
+---
+
+## ✔️ Key Findings
+
+- Performance **improved for both ANN and SVM** after applying GA.  
+- Reducing the number of features improved generalization and classification stability.  
+- SVM achieved the **best results overall**, both before and after GA.  
+- Dimensionality reduction removed weak/irrelevant features and focused on the most informative ones.
+
+> 🧩 Important Insight:  
+> **More features ≠ better performance**.  
+> The models performed better when fewer, more meaningful features were used.
 
 ---
 
-## ✔️ Key Insights
-
-- GA reduced dimensionality by **45% for ANN** and **33% for SVM**.  
-- ANN accuracy improved by **+2.84%**, SVM by **+1.42%**.  
-- Eliminating redundant features improved model stability and reduced misclassification.
-- **Feature quality matters more than feature quantity.**
-
----
-
-## 📁 Project Files
+## 📁 Project Structure
 
